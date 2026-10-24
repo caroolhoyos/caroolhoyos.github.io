@@ -263,35 +263,39 @@ footer{color:var(--muted);font-size:.85rem}
     {l:'÷0',h:30,m:'division by zero'},{l:'NaN',h:30,m:'NaN propagated'},{l:'OOB',h:30,m:'out-of-bounds access'},
     {l:'null',h:42,m:'null dereference'},{l:'race',h:42,m:'data race'},{l:'∞',h:54,m:'non-termination'}];
   var SYMS=['∀','∃','⊢','λ','∧','∨','⇒','□','◇','≡'];
+  var START=7, MAXV=12.5, JV=12.5, GRAV=0.95;   
   var P={x:44,y:0,vy:0,w:28,h:28}, obs=[], pops=[], bg=[];
-  var speed=5, score=0, best=0, mode='auto', t=0, running=false, last=0, played=false, hit=null;
+  var speed=START, score=0, best=0, mode='auto', t=0, running=false, last=0, played=false, hit=null;
+  var gapLeft=0, buf=0;                          
   try{ best=parseInt(localStorage.getItem('chaBest'),10)||0; }catch(e){}
   function rank(){ return score<5?'unit tests':score<10?'type checker':score<20?'model checker':'proof assistant'; }
   function initBg(){ bg=[]; for(var i=0;i<8;i++) bg.push({x:Math.random()*W,y:46+Math.random()*50,s:SYMS[i%SYMS.length],v:.12+Math.random()*.15}); }
   function resize(){
     var d=window.devicePixelRatio||1; W=cv.clientWidth;
-    cv.width=W*d; cv.height=H*d; ctx.setTransform(d,0,0,d,0,0); initBg();
+    cv.width=Math.round(W*d); cv.height=Math.round(H*d); ctx.setTransform(cv.width/W,0,0,cv.height/H,0,0); initBg();
   }
-  function reset(){ obs=[]; pops=[]; hit=null; score=0; speed=5; P.y=0; P.vy=0; }
-  function jump(){ if(P.y===0) P.vy=11; }
-  function spawn(){
-    var l=obs[obs.length-1];
-    if(!l || l.x < W-l.gap){
+  function reset(){ obs=[]; pops=[]; hit=null; score=0; speed=START; P.y=0; P.vy=0; gapLeft=0; buf=0; }
+  function jump(){ if(P.y===0&&P.vy===0) P.vy=JV; else buf=8; }   // si pulsas en el aire, salta al aterrizar
+  function spawn(dt){
+    gapLeft-=speed*dt;
+    if(gapLeft<=0){
       var b=BUGS[Math.floor(Math.random()*BUGS.length)];
-      obs.push({x:W+20,w:44,h:b.h,label:b.l,m:b.m,gap:300+Math.random()*160,done:false});
+      obs.push({x:W+20,w:44,h:b.h,label:b.l,m:b.m,done:false});
+      gapLeft=speed*26+150+Math.random()*speed*12;   // el hueco crece con la velocidad
     }
   }
   function update(dt){
     t+=speed*dt;
-    if(mode==='human') speed=Math.min(7.5,speed+0.0015*dt);
-    spawn();
+    if(mode==='human') speed=Math.min(MAXV,speed+0.003*dt);
+    spawn(dt);
+    if(buf>0){ buf-=dt; if(P.y===0&&P.vy===0){ P.vy=JV; buf=0; } }
     if(mode==='auto'){
       for(var i=0;i<obs.length;i++){
         var g=obs[i].x-(P.x+P.w);
-        if(g>0){ if(g<70) jump(); break; }
+        if(g>0){ if(g<speed*9) jump(); break; }
       }
     }
-    P.y+=P.vy*dt; P.vy-=0.6*dt;
+    P.y+=P.vy*dt; P.vy-=GRAV*dt;
     if(P.y<=0){P.y=0;P.vy=0;}
     bg.forEach(function(b){ b.x-=speed*b.v*dt; if(b.x<-20){ b.x=W+20; b.y=46+Math.random()*50; } });
     for(var k=pops.length-1;k>=0;k--){ var q=pops[k]; q.y-=0.8*dt; q.life-=0.02*dt; if(q.life<=0) pops.splice(k,1); }
@@ -309,22 +313,27 @@ footer{color:var(--muted);font-size:.85rem}
     var small=W<520;
     ctx.clearRect(0,0,W,H);
     ctx.textBaseline='middle'; ctx.textAlign='center';
-    ctx.font='italic 22px '+SERIF; ctx.fillStyle=col['--line']; ctx.globalAlpha=.7;
-    bg.forEach(function(b){ ctx.fillText(b.s,b.x,b.y); });
+    ctx.font='italic 22px '+SERIF; ctx.fillStyle=col['--muted']; ctx.globalAlpha=.22;
+    bg.forEach(function(b){ ctx.fillText(b.s,Math.round(b.x),Math.round(b.y)); });
     ctx.globalAlpha=1;
-    ctx.lineWidth=2; ctx.strokeStyle=col['--line'];
+    ctx.lineWidth=2; ctx.strokeStyle=col['--muted'];
     ctx.beginPath(); ctx.moveTo(0,GY+1); ctx.lineTo(W,GY+1); ctx.stroke();
-    ctx.lineWidth=1;
-    for(var x=-(t%24);x<W;x+=24){ ctx.beginPath(); ctx.moveTo(x,GY+10); ctx.lineTo(x+8,GY+10); ctx.stroke(); }
-    ctx.font='12px '+MONO;
+    ctx.lineWidth=1; ctx.strokeStyle=col['--line'];
+    for(var x=-Math.round(t%24);x<W;x+=24){ ctx.beginPath(); ctx.moveTo(x,GY+10.5); ctx.lineTo(x+8,GY+10.5); ctx.stroke(); }
+    // sombra del corredor: ayuda a leer la altura del salto
+    var sh=Math.max(.35,1-P.y/110);
+    ctx.globalAlpha=.25*sh; ctx.fillStyle=col['--muted'];
+    ctx.fillRect(P.x+14-14*sh,GY+2,P.w*sh,3);
+    ctx.globalAlpha=1;
+    ctx.font='bold 14px '+MONO;
     obs.forEach(function(o){
-      var bad=(o===hit);
+      var bad=(o===hit), ox=Math.round(o.x);
       ctx.fillStyle=bad?col['--accent-soft']:col['--slate-soft']; ctx.strokeStyle=bad?col['--accent']:col['--slate']; ctx.lineWidth=2;
-      ctx.fillRect(o.x,GY-o.h,o.w,o.h); ctx.strokeRect(o.x,GY-o.h,o.w,o.h);
-      ctx.fillStyle=bad?col['--accent']:col['--slate']; ctx.fillText(o.label,o.x+o.w/2,GY-o.h/2);
+      ctx.fillRect(ox,GY-o.h,o.w,o.h); ctx.strokeRect(ox+1,GY-o.h+1,o.w-2,o.h-2);
+      ctx.fillStyle=bad?col['--accent']:col['--slate']; ctx.fillText(o.label,ox+o.w/2,GY-o.h/2);
     });
     // runner: body + two legs
-    var top=GY-P.y-P.h, bodyH=P.h-6, step=Math.floor(t/8)%2, air=P.y>0;
+    var top=Math.round(GY-P.y-P.h), bodyH=P.h-6, step=Math.floor(t/7)%2, air=P.y>0;
     ctx.fillStyle=mode==='over'?col['--muted']:col['--accent'];
     ctx.fillRect(P.x,top,P.w,bodyH);
     ctx.fillRect(P.x+4,top+bodyH,8,air?6:(step?6:3));
