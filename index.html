@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carolina Hoyos Agudo — Formal Methods Researcher</title>
+<meta name="description" content="PhD student and researcher in formal methods at Universidad Complutense de Madrid.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Outfit:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f4fb; --surface:#fff; --ink:#171a35; --muted:#5d6280; --line:#d5d8ec;
+  --accent:#5a3df0; --accent-soft:#e8e4ff; --spark:#f5a623;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0f1224; --surface:#171b33; --ink:#eceefb; --muted:#9aa0c4; --line:#2a3052;
+         --accent:#9d8cff; --accent-soft:#242050; --spark:#ffc15a; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Outfit",system-ui,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{max-width:1040px;margin:0 auto;padding:56px 24px 80px;display:grid;grid-template-columns:290px 1fr;gap:56px}
+
+/* Sidebar */
+aside{position:sticky;top:40px;align-self:start}
+.photo{position:relative;width:220px;aspect-ratio:4/5;margin:0 0 34px 10px}
+.photo::before{content:"";position:absolute;inset:0;transform:translate(-12px,12px);
+  border:2px solid var(--accent);border-radius:110px 110px 18px 18px}
+.photo .frame{position:absolute;inset:0;border-radius:110px 110px 18px 18px;overflow:hidden;
+  background:var(--accent-soft);display:grid;place-items:center;
+  font:700 3.4rem "Fraunces",serif;color:var(--accent)}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+aside h1{font:700 2.3rem/1.05 "Fraunces",Georgia,serif;margin:0 0 6px}
+.role{color:var(--muted);margin:0 0 20px}
+.contact{list-style:none;padding:0;margin:0 0 28px}
+.contact li{margin:4px 0}
+.side h3{font:500 .95rem "Outfit";color:var(--muted);margin:18px 0 6px}
+.dl{display:inline-block;margin:0 0 26px;padding:9px 20px;border-radius:99px;background:var(--accent);color:#fff;text-decoration:none;font-weight:500}
+.dl:hover{filter:brightness(1.1)}
+@media (prefers-color-scheme: dark){.dl{color:#10122a}}
+.chips span{display:inline-block;border:1px solid var(--line);background:var(--surface);
+  border-radius:99px;padding:1px 11px;margin:0 4px 6px 0;font-size:.88rem}
+
+/* Hero line */
+.triple{font:400 1rem/1.7 "JetBrains Mono",monospace;background:var(--surface);
+  border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin:0 0 48px;overflow-x:auto}
+.triple b{color:var(--accent);font-weight:400}
+.triple i{color:var(--spark);font-style:normal}
+
+/* Timeline */
+h2{font:700 1.6rem "Fraunces",Georgia,serif;margin:0 0 26px}
+section{margin-bottom:48px}
+.tl{position:relative;padding-left:34px}
+.tl::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;
+  background:linear-gradient(var(--accent),var(--line))}
+.node{position:relative;margin-bottom:26px}
+.node::before{content:"";position:absolute;left:-34px;top:6px;width:16px;height:16px;border-radius:50%;
+  background:var(--bg);border:3px solid var(--accent)}
+.node.now::before{background:var(--spark);border-color:var(--spark);box-shadow:0 0 0 5px var(--accent-soft)}
+.when{font:400 .82rem "JetBrains Mono",monospace;color:var(--muted)}
+.node h3{margin:2px 0 0;font-size:1.12rem;font-weight:600}
+.sub{margin:0;color:var(--accent);font-weight:500}
+.org{margin:0;color:var(--muted)}
+.node p.t{margin:6px 0 0}
+.node ul{margin:8px 0 0;padding-left:1.1em}
+.tag{display:inline-block;background:var(--accent-soft);color:var(--accent);font-size:.85rem;
+  padding:1px 10px;border-radius:99px;margin:4px 4px 0 0}
+footer{color:var(--muted);font-size:.85rem}
+
+@media (max-width:820px){
+  .wrap{grid-template-columns:1fr;gap:32px;padding-top:36px}
+  aside{position:static}
+}
+@media print{ body{background:#fff;color:#000} aside{position:static} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<aside>
+  <!-- Put your photo next to this file as photo.jpg (portrait, ~800x1000 px). Until then, initials show. -->
+  <div class="photo"><div class="frame">CH<img src="photo.jpg" alt="Portrait of Carolina Hoyos Agudo" onerror="this.remove()"></div></div>
+  <h1>Carolina Hoyos Agudo</h1>
+  <p class="role">PhD student &amp; researcher in formal methods<br>Universidad Complutense de Madrid</p>
+  <ul class="contact">
+    <li><a href="mailto:cahoyos@ucm.es">cahoyos@ucm.es</a></li>
+    <li><a href="https://www.linkedin.com/in/carolina-hoyos-17a585245/">LinkedIn</a></li>
+    <li>Madrid, Spain</li>
+  </ul>
+  <a class="dl" href="Carolina_Hoyos_CV.pdf" download>Download PDF</a>
+  <div class="side">
+    <h3>Programming</h3>
+    <div class="chips"><span>Python</span><span>R</span><span>Dafny</span><span>Lean</span><span>Haskell</span></div>
+    <h3>Tools</h3>
+    <div class="chips"><span>LaTeX</span><span>Git</span></div>
+    <h3>Languages</h3>
+    <div class="chips"><span>Spanish · native</span><span>English · C1</span><span>Italian · B1</span><span>Chinese · A1.1</span></div>
+  </div>
+</aside>
+
+<main>
+  <p class="triple">{ <b>rigorous methods</b> } <i>build software</i> { <b>reliable</b> ∧ <b>efficient</b> }</p>
+
+  <section>
+    <h2>Education</h2>
+    <div class="tl">
+      <div class="node now">
+        <div class="when">Oct 2026 – present</div>
+        <h3>PhD in Computer Engineering</h3><p class="org">Universidad Complutense de Madrid</p>
+      </div>
+      <div class="node">
+        <div class="when">Oct 2025 – Sep 2026</div>
+        <h3>MSc in Formal Methods in Computer Engineering</h3><p class="org">Universidad Complutense de Madrid</p>
+        <p class="t">Highest honors in:</p>
+        <span class="tag">Quantum Computing</span><span class="tag">Assisted Program Verification</span>
+        <span class="tag">Static Analysis &amp; Constraint Solving</span><span class="tag">Bioinspired Algorithm Design</span>
+        <span class="tag">Theory of Programming Languages</span>
+      </div>
+      <div class="node">
+        <div class="when">Jan 2020 – Feb 2025</div>
+        <h3>BSc in Mathematics</h3>
+        <p class="sub">Specialization in Computer Science</p>
+        <p class="org">Universidad Complutense de Madrid</p>
+      </div>
+      <div class="node">
+        <div class="when">2022 – 2023</div>
+        <h3>Erasmus exchange</h3><p class="org">Sapienza Università di Roma, Italy</p>
+      </div>
+      <div class="node">
+        <div class="when">2018 – 2020</div>
+        <h3>Excellence Baccalaureate</h3><p class="org">IES Arquitecto Ventura Rodríguez, Boadilla del Monte</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Experience</h2>
+    <div class="tl">
+      <div class="node now">
+        <div class="when">Jun 2026 – present</div>
+        <h3>Research Staff (PLI)</h3><p class="org">Universidad Complutense de Madrid</p>
+        <p class="t">Contracted researcher on the project <i>“Rigorous methods for reliable and efficient software systems”</i>.</p>
+      </div>
+      <div class="node now">
+        <div class="when">Feb 2026 – present</div>
+        <h3>Substitute Lecturer</h3><p class="org">Department of Statistics and Operations Research, UCM</p>
+        <ul>
+          <li><b>Statistics</b>, BSc Mathematics (40 h)</li>
+          <li><b>Time Series</b>, Double Degree in Economics–Mathematics and Data Science (30 h)</li>
+          <li><b>Statistical Software</b>, MSc in Statistical-Computational Information Processing (7.5 h)</li>
+          <li><b>Statistics</b>, BSc Pharmacy (15 h)</li>
+          <li><b>Time Series, Panel Data and Calendar Seasonal Adjustment</b>, MSc in Official Statistics and Socio-Economic Indicators (11.5 h)</li>
+        </ul>
+      </div>
+      <div class="node">
+        <div class="when">Feb – May 2026</div>
+        <h3>Curricular Internship</h3><p class="org">FADOSS research group, UCM</p>
+        <p class="t">Collaborated on research tasks within the group.</p>
+      </div>
+      <div class="node">
+        <div class="when">Sep 2024 – Oct 2025</div>
+        <h3>IT Audit</h3><p class="org">Grant Thornton, Madrid</p>
+        <p class="t">Took part in information systems audits.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Conferences &amp; schools</h2>
+    <div class="tl">
+      <div class="node">
+        <div class="when">2026</div>
+        <ul style="margin:4px 0 0">
+          <li>Marktoberdorf International Summer School, Herrsching am Ammersee, Germany</li>
+          <li>StandUp Math 2026, UCM</li>
+          <li>Emerging Trends in Game Theory, VII SEIO Course on Game Theory</li>
+          <li>SEIO 2026, Santiago de Compostela</li>
+        </ul>
+      </div>
+      <div class="node"><div class="when">2024</div><p class="t" style="margin:2px 0 0">EACA, Meeting on Computer Algebra and Applications</p></div>
+      <div class="node"><div class="when">2022 – 2026</div><p class="t" style="margin:2px 0 0">ENEM, Spanish National Meeting of Mathematics Students</p></div>
+    </div>
+  </section>
+
+  <footer>Last updated October 2026</footer>
+</main>
+
+</div>
+</body>
+</html>
