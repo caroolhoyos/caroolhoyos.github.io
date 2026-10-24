@@ -53,7 +53,7 @@ aside h1{font:700 2.5rem/1.05 var(--serif);margin:0 0 6px}
 .triple{border-left:4px solid var(--accent)}
 .triple i{color:var(--muted);font-style:normal}
 
-.intro{font-size:1.2rem;line-height:1.55;margin:0 0 28px;max-width:62ch}
+.intro{font-size:1.2rem;line-height:1.55;margin:0 0 28px;text-align:justify;text-justify:inter-word;hyphens:auto;-webkit-hyphens:auto}
 .courses{margin-top:8px}
 .courses summary{cursor:pointer;color:var(--accent);font-weight:700;list-style:none;width:fit-content}
 .courses summary::-webkit-details-marker{display:none}
@@ -61,6 +61,12 @@ aside h1{font:700 2.5rem/1.05 var(--serif);margin:0 0 6px}
 .courses[open] summary::before{transform:rotate(90deg)}
 .courses summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 @media (prefers-reduced-motion: reduce){.courses summary::before{transition:none}}
+.thesis{margin:12px 0 0}
+.thesis .body{margin:10px 0 0;padding-left:16px;border-left:2px solid var(--line)}
+.thesis .th{margin:0;font-weight:700}
+.thesis .gr{margin:2px 0 12px;color:var(--accent);font-style:italic}
+.thesis .ab{margin:0 0 .75em;max-width:62ch;text-align:justify;text-justify:inter-word;hyphens:auto;-webkit-hyphens:auto}
+.sc{font-variant:small-caps;letter-spacing:.02em;white-space:nowrap}
 /* Game */
 .game{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin:0 0 48px;overflow:hidden}
 .game canvas{display:block;width:100%;height:180px;cursor:pointer;touch-action:manipulation}
@@ -112,6 +118,7 @@ footer{color:var(--muted);font-size:.85rem}
 
 <aside>
 <div class="profile">
+  <!-- Put your photo next to this file as photo.jpg (portrait, ~800x1000 px). Until then, initials show. -->
   <div class="photo"><div class="frame">CH<img src="photo.jpg" alt="Portrait of Carolina Hoyos Agudo" onerror="this.remove()"></div></div>
   <h1>Carolina Hoyos Agudo</h1>
   <p class="role">PhD student &amp; researcher in formal methods<br>Universidad Complutense de Madrid</p>
@@ -133,7 +140,7 @@ footer{color:var(--muted);font-size:.85rem}
 </aside>
 
 <main>
-  <p class="intro">Hi, I’m Carolina, a <b>PhD student</b> and researcher in <b>formal methods</b> at Universidad Complutense de Madrid. I work at the crossroads of mathematics and computer science, and my research currently focuses on <b>computational social choice</b>: using rigorous mathematical and algorithmic tools to study how groups of people, or of agents, can reach collective decisions fairly.</p>
+  <p class="intro">Hi, I’m Carolina, a <b>PhD student</b> and researcher in <b>formal methods</b> at Universidad Complutense de Madrid. I work at the crossroads of mathematics and computer science, and my research currently focuses on <b>computational social choice</b>: using rigorous mathematical and algorithmic tools to study how groups of people, or of agents, can reach collective decisions fairly. With AI systems taking part in more and more of the decisions that affect us, being able to reason precisely about what they guarantee, and to prove it, matters more than ever.</p>
   <p class="triple">{ <b>rigorous methods</b> } <i>build software</i> { <b>reliable</b> ∧ <b>efficient</b> }</p>
 
   <div class="game"><canvas id="game" tabindex="0" aria-label="Mini game: jump over bugs. Press space or tap to play."></canvas></div>
@@ -160,6 +167,15 @@ footer{color:var(--muted);font-size:.85rem}
         <span class="tag">Quantum Computing</span><span class="tag">Assisted Program Verification</span>
         <span class="tag">Static Analysis &amp; Constraint Solving</span><span class="tag">Bioinspired Algorithm Design</span>
         <span class="tag">Theory of Programming Languages</span>
+        <details class="courses thesis"><summary>Master’s thesis</summary>
+          <div class="body">
+            <p class="th">Hardness of the Ad Hoc Design of Electoral Systems for Achieving a Desired Outcome</p>
+            <p class="gr">Grade: 10/10 · Highest honors</p>
+            <p class="ab">This Master’s Thesis focuses on the study of the hardness of designing a multi-round electoral system from a given voter preference profile. In each round, a scoring vector is applied, and the objective is to determine whether there exists a choice of such vectors under which a candidate previously designated by the organizer is elected. Therefore, the electoral system is not assumed to be fixed, but is instead regarded as a part of the decision problem itself.</p>
+            <p class="ab">In the first part, several variants of the problem are formally defined according to the number of rounds allowed and the possible values that the scoring vectors may take. The computational complexity of these variants is then analysed. In particular, the <span class="sc">NP-Completeness</span> of some variants is proved by a polynomial-time reduction from <span class="sc">3-SAT</span>. Furthermore, the <span class="sc">APX-Hardness</span> of the corresponding optimization version of some variants is established.</p>
+            <p class="ab">In the second part, a genetic algorithm is proposed as a heuristic approach for solving instances of the problem. An experimental study is done using both artificial instances generated according to the Impartial Culture (IC) and Mallows models and data from real-world electoral polls. This study will assess the ability of the genetic algorithm to identify feasible solutions and analyses the type of instances for which it is easier to construct an electoral system that leads to the election of the desired candidate.</p>
+          </div>
+        </details>
       </div>
       <div class="node">
         <div class="when">Jan 2020 – Feb 2025</div>
