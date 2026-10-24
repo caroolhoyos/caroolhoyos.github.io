@@ -45,10 +45,17 @@ aside h1{font:700 2.3rem/1.05 "Fraunces",Georgia,serif;margin:0 0 6px}
 
 /* Hero line */
 .triple{font:400 1rem/1.7 "JetBrains Mono",monospace;background:var(--surface);
-  border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin:0 0 48px;overflow-x:auto}
+  border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin:0 0 12px;overflow-x:auto}
 .triple b{color:var(--accent);font-weight:400}
 .triple{border-left:4px solid var(--accent)}
 .triple i{color:var(--muted);font-style:normal}
+
+/* Game */
+.game{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin:0 0 48px;overflow:hidden}
+.game canvas{display:block;width:100%;height:180px;cursor:pointer;touch-action:manipulation}
+.game canvas:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.interests{display:flex;flex-wrap:wrap;gap:10px}
+.interests span{background:var(--accent-soft);color:var(--accent);border-radius:99px;padding:6px 16px;font-weight:500}
 
 /* Timeline */
 h2{font:700 1.6rem "Fraunces",Georgia,serif;margin:0 0 26px;display:flex;align-items:center;gap:14px}
@@ -104,6 +111,16 @@ footer{color:var(--muted);font-size:.85rem}
 
 <main>
   <p class="triple">{ <b>rigorous methods</b> } <i>build software</i> { <b>reliable</b> ∧ <b>efficient</b> }</p>
+
+  <div class="game"><canvas id="game" tabindex="0" aria-label="Mini game: jump over bugs. Press space or tap to play."></canvas></div>
+
+  <section>
+    <h2>Research interests</h2>
+    <div class="interests">
+      <span>Computational complexity</span><span>Social choice</span><span>Cryptography</span><span>Formal verification</span>
+    </div>
+  </section>
+
 
   <section>
     <h2>Education</h2>
@@ -190,5 +207,102 @@ footer{color:var(--muted);font-size:.85rem}
 </main>
 
 </div>
+
+<script>
+(function(){
+  var cv=document.getElementById('game'); if(!cv) return;
+  var ctx=cv.getContext('2d'), W=0, H=180, GY=140;
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var col={};
+  function readCols(){
+    var st=getComputedStyle(document.documentElement);
+    ['--accent','--slate','--muted','--line','--surface','--slate-soft'].forEach(function(k){col[k]=st.getPropertyValue(k).trim();});
+  }
+  function resize(){
+    var d=window.devicePixelRatio||1; W=cv.clientWidth;
+    cv.width=W*d; cv.height=H*d; ctx.setTransform(d,0,0,d,0,0);
+  }
+  var P={x:44,y:0,vy:0,w:28,h:28}, obs=[], speed=5, score=0, mode='auto', t=0, running=false, last=0, played=false;
+  var labels=['÷0','null','NaN','race','OOB'];
+  function reset(){obs=[];score=0;speed=5;P.y=0;P.vy=0;}
+  function jump(){ if(P.y===0) P.vy=11; }
+  function spawn(){
+    var lastO=obs[obs.length-1];
+    if(!lastO || lastO.x < W-lastO.gap){
+      obs.push({x:W+20,w:44,h:Math.random()<.5?30:42,label:labels[Math.floor(Math.random()*labels.length)],
+                gap:300+Math.random()*160,done:false});
+    }
+  }
+  function update(dt){
+    t+=speed*dt;
+    if(mode==='human') speed=Math.min(7.5,speed+0.0015*dt);
+    spawn();
+    if(mode==='auto'){
+      for(var i=0;i<obs.length;i++){
+        var g=obs[i].x-(P.x+P.w);
+        if(g>0){ if(g<70) jump(); break; }
+      }
+    }
+    P.y+=P.vy*dt; P.vy-=0.6*dt;
+    if(P.y<=0){P.y=0;P.vy=0;}
+    for(var j=obs.length-1;j>=0;j--){
+      var o=obs[j]; o.x-=speed*dt;
+      if(!o.done && o.x+o.w<P.x){o.done=true;score++;}
+      if(mode==='human' && P.x+P.w>o.x+3 && P.x<o.x+o.w-3 && P.y<o.h-2){ mode='over'; }
+      if(o.x+o.w<-10) obs.splice(j,1);
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.lineWidth=2; ctx.strokeStyle=col['--line'];
+    ctx.beginPath(); ctx.moveTo(0,GY+1); ctx.lineTo(W,GY+1); ctx.stroke();
+    ctx.lineWidth=1;
+    for(var x=-(t%24);x<W;x+=24){ ctx.beginPath(); ctx.moveTo(x,GY+10); ctx.lineTo(x+8,GY+10); ctx.stroke(); }
+    ctx.font='11px "JetBrains Mono",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    obs.forEach(function(o){
+      ctx.fillStyle=col['--slate-soft']; ctx.strokeStyle=col['--slate']; ctx.lineWidth=2;
+      ctx.fillRect(o.x,GY-o.h,o.w,o.h); ctx.strokeRect(o.x,GY-o.h,o.w,o.h);
+      ctx.fillStyle=col['--slate']; ctx.fillText(o.label,o.x+o.w/2,GY-o.h/2);
+    });
+    var py=GY-P.y-P.h;
+    ctx.fillStyle=col['--accent']; ctx.fillRect(P.x,py,P.w,P.h);
+    ctx.fillStyle=col['--surface']; ctx.font='bold 13px "JetBrains Mono",monospace';
+    ctx.fillText('{ }',P.x+P.w/2,py+P.h/2+1);
+    ctx.font='12px "JetBrains Mono",monospace'; ctx.textBaseline='alphabetic';
+    ctx.textAlign='left';
+    var msg = mode==='auto' ? 'model checker at the wheel · press space or tap to take over'
+            : mode==='over' ? 'counterexample found · press space or tap to retry' : 'avoid every bug';
+    ctx.fillStyle = mode==='over' ? col['--accent'] : col['--muted'];
+    ctx.fillText(msg,14,H-14);
+    ctx.textAlign='right'; ctx.fillStyle=col['--muted'];
+    ctx.fillText('✓ '+score+' properties verified',W-14,24);
+  }
+  function loop(now){
+    if(!running) return;
+    var dt=Math.min(3,(now-last)/16.667); last=now;
+    if(mode!=='over') update(dt);
+    draw();
+    requestAnimationFrame(loop);
+  }
+  function start(){ if(!running){running=true;last=performance.now();requestAnimationFrame(loop);} }
+  function stop(){ running=false; }
+  function press(e){
+    played=true;
+    if(mode==='auto'||mode==='over'){ reset(); mode='human'; }
+    jump(); start();
+    if(e) e.preventDefault();
+  }
+  cv.addEventListener('pointerdown',function(e){cv.focus({preventScroll:true});press(e);});
+  cv.addEventListener('keydown',function(e){ if(e.code==='Space'||e.code==='ArrowUp') press(e); });
+  try{ matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){readCols();draw();}); }catch(_){}
+  window.addEventListener('resize',function(){resize();draw();});
+  readCols(); resize(); reset(); draw();
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(en){
+      if(en[0].isIntersecting && (!reduce||played)) start(); else stop();
+    }).observe(cv);
+  } else if(!reduce){ start(); }
+})();
+</script>
 </body>
 </html>
